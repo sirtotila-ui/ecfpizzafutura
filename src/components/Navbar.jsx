@@ -264,7 +264,7 @@ export default function Navbar() {
                   style={{
                     padding: "16px 0",
                     fontFamily: theme.typography.fontFamily.sans,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: 500,
                     color: isMarketPage && item.id === "market" ? theme.colors.primary.main : theme.colors.text.primary,
                     textDecoration: "none",
@@ -283,7 +283,7 @@ export default function Navbar() {
                     width: "100%",
                     textAlign: "left",
                     fontFamily: theme.typography.fontFamily.sans,
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: 500,
                     color: activeSection === item.id ? theme.colors.primary.main : theme.colors.text.primary,
                     background: "none",
@@ -301,9 +301,9 @@ export default function Navbar() {
               onClick={handlePrenota}
               style={{
                 marginTop: 24,
-                padding: "16px 24px",
+                padding: "14px 20px",
                 fontFamily: theme.typography.fontFamily.sans,
-                fontSize: 18,
+                fontSize: 15,
                 fontWeight: 600,
                 color: theme.colors.background.white,
                 background: theme.colors.primary.main,
