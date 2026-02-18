@@ -49,6 +49,35 @@ export default function Filosofia() {
           leggero, digeribile, cotto nel forno a legna. Ogni pizza racconta un
           territorio.
         </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          style={{
+            marginTop: theme.spacing["6xl"],
+          }}
+        >
+          <motion.a
+            href="/market"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              display: "inline-block",
+              background: theme.colors.primary.main,
+              color: theme.colors.background.white,
+              padding: `${theme.spacing.xl} ${theme.spacing["5xl"]}`,
+              borderRadius: theme.borderRadius.lg,
+              fontFamily: theme.typography.fontFamily.sans,
+              fontSize: theme.typography.fontSize.lg,
+              fontWeight: theme.typography.fontWeight.bold,
+              textDecoration: "none",
+              cursor: "pointer",
+              boxShadow: theme.shadows.md,
+            }}
+          >
+            Visita il Market →
+          </motion.a>
+        </motion.div>
       </div>
     </section>
   );

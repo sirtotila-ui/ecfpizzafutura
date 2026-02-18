@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Link, useLocation } from "react-router-dom";
 import { SECTIONS, NAV_LABELS } from "../constants/data";
 import { CONFIG } from "../constants/config";
 import { theme } from "../styles/theme";
@@ -7,6 +8,8 @@ import { useScroll } from "../hooks/useScroll";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isMarketPage = location.pathname === "/market";
   const activeSection = useScroll();
 
   useEffect(() => {
@@ -17,8 +20,24 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   const scrollToSection = (id) => {
+    if (isMarketPage) {
+      setMobileMenuOpen(false);
+      return;
+    }
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
+  };
+
+  const getNavClickHandler = (id) => () => {
+    if (id === "market") {
+      setMobileMenuOpen(false);
+      return;
+    }
+    if (isMarketPage) {
+      setMobileMenuOpen(false);
+      return;
+    }
+    scrollToSection(id);
   };
 
   return (
@@ -42,12 +61,8 @@ export default function Navbar() {
           boxShadow: theme.shadows.sm,
         }}
       >
-        <a
-          href="#home"
-          onClick={(e) => {
-            e.preventDefault();
-            scrollToSection("home");
-          }}
+        <Link
+          to="/"
           style={{
             display: "flex",
             alignItems: "center",
@@ -64,31 +79,51 @@ export default function Navbar() {
               objectFit: "contain",
             }}
           />
-        </a>
+        </Link>
         <div
           style={{ display: "flex", gap: theme.spacing.xs }}
           className="pt-dsk"
         >
-          {SECTIONS.map((id) => (
-            <button
-              key={id}
-              onClick={() => scrollToSection(id)}
-              aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
-              style={{
-                background: "none",
-                border: "none",
-                cursor: "pointer",
-                padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-                fontFamily: theme.typography.fontFamily.sans,
-                fontSize: theme.typography.fontSize.xs,
-                fontWeight:
-                  activeSection === id
-                    ? theme.typography.fontWeight.semibold
-                    : theme.typography.fontWeight.normal,
-                color:
-                  activeSection === id
-                    ? theme.colors.primary.main
-                    : theme.colors.text.secondary,
+          {SECTIONS.map((id) =>
+            id === "market" ? (
+              <Link
+                key={id}
+                to="/market"
+                onClick={() => setMobileMenuOpen(false)}
+                aria-label="Vai al Market"
+                style={{
+                  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.xs,
+                  fontWeight: isMarketPage ? theme.typography.fontWeight.semibold : theme.typography.fontWeight.normal,
+                  color: isMarketPage ? theme.colors.primary.main : theme.colors.text.secondary,
+                  textTransform: "uppercase",
+                  letterSpacing: theme.typography.letterSpacing.tight,
+                  textDecoration: "none",
+                }}
+              >
+                {NAV_LABELS[id]}
+              </Link>
+            ) : (
+              <button
+                key={id}
+                onClick={isMarketPage ? () => setMobileMenuOpen(false) : getNavClickHandler(id)}
+                aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
+                style={{
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.xs,
+                  fontWeight:
+                    activeSection === id
+                      ? theme.typography.fontWeight.semibold
+                      : theme.typography.fontWeight.normal,
+                  color:
+                    activeSection === id
+                      ? theme.colors.primary.main
+                      : theme.colors.text.secondary,
                 textTransform: "uppercase",
                 letterSpacing: theme.typography.letterSpacing.tight,
                 transition: theme.transitions.fast,
@@ -106,7 +141,8 @@ export default function Navbar() {
             >
               {NAV_LABELS[id]}
             </button>
-          ))}
+            )
+          )}
         </div>
         <button
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -185,32 +221,60 @@ export default function Navbar() {
                 padding: theme.spacing["3xl"],
               }}
             >
-              {SECTIONS.map((id) => (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: theme.spacing.xl,
-                    fontFamily: theme.typography.fontFamily.display,
-                    fontSize: theme.typography.fontSize["2xl"],
-                    fontWeight: theme.typography.fontWeight.semibold,
-                    color:
-                      activeSection === id
-                        ? theme.colors.primary.main
-                        : theme.colors.text.primary,
-                    width: "100%",
-                    maxWidth: 320,
-                    textAlign: "center",
-                    transition: theme.transitions.fast,
-                  }}
-                >
-                  {NAV_LABELS[id]}
-                </button>
-              ))}
+              {SECTIONS.map((id) =>
+                id === "market" ? (
+                  <Link
+                    key={id}
+                    to="/market"
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{
+                      padding: theme.spacing.xl,
+                      fontFamily: theme.typography.fontFamily.display,
+                      fontSize: theme.typography.fontSize["2xl"],
+                      fontWeight: theme.typography.fontWeight.semibold,
+                      color: isMarketPage ? theme.colors.primary.main : theme.colors.text.primary,
+                      width: "100%",
+                      maxWidth: 320,
+                      textAlign: "center",
+                      textDecoration: "none",
+                    }}
+                  >
+                    {NAV_LABELS[id]}
+                  </Link>
+                ) : (
+                  <button
+                    key={id}
+                    onClick={() => {
+                      if (isMarketPage) {
+                        setMobileMenuOpen(false);
+                        window.location.href = `/#${id}`;
+                      } else {
+                        scrollToSection(id);
+                      }
+                    }}
+                    aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      padding: theme.spacing.xl,
+                      fontFamily: theme.typography.fontFamily.display,
+                      fontSize: theme.typography.fontSize["2xl"],
+                      fontWeight: theme.typography.fontWeight.semibold,
+                      color:
+                        activeSection === id
+                          ? theme.colors.primary.main
+                          : theme.colors.text.primary,
+                      width: "100%",
+                      maxWidth: 320,
+                      textAlign: "center",
+                      transition: theme.transitions.fast,
+                    }}
+                  >
+                    {NAV_LABELS[id]}
+                  </button>
+                )
+              )}
             </div>,
             document.body
           )}

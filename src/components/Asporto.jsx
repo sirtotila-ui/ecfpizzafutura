@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import SectionHeader from "./SectionHeader";
 import { MARKET_FEATURES } from "../constants/data";
-import { CONFIG } from "../constants/config";
 import { theme } from "../styles/theme";
 
 export default function Market() {
@@ -118,9 +117,7 @@ export default function Market() {
             ))}
           </ul>
           <motion.a
-            href={CONFIG.links.market}
-            target="_blank"
-            rel="noopener noreferrer"
+            href="#"
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             style={{
@@ -135,13 +132,6 @@ export default function Market() {
               fontWeight: theme.typography.fontWeight.bold,
               cursor: "pointer",
               textDecoration: "none",
-              transition: "all 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = theme.colors.primary.dark;
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = theme.colors.primary.main;
             }}
           >
             Visita il Market →

@@ -19,6 +19,6 @@ export const CONFIG = {
   links: {
     prenota: "#contatti",
     menu: "#menu",
-    market: "https://pizzafutura.org/market",
+    market: "#",
   },
 };
