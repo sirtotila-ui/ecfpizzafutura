@@ -101,11 +101,31 @@ export default function Menu() {
                   border: `1px solid ${theme.colors.border.light}`,
                 }}
               >
-                <div style={{ padding: theme.spacing.md }}>
-                  <PlaceholderImage
-                    label="[Foto pizza]"
-                    aspectRatio="4/3"
-                  />
+                <div
+                  style={{
+                    padding: theme.spacing.md,
+                    aspectRatio: "4/3",
+                    overflow: "hidden",
+                    borderRadius: theme.borderRadius.sm,
+                  }}
+                >
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
+                        display: "block",
+                      }}
+                    />
+                  ) : (
+                    <PlaceholderImage
+                      label="[Foto pizza]"
+                      aspectRatio="4/3"
+                    />
+                  )}
                 </div>
                 {item.tag && (
                   <div
@@ -214,11 +234,26 @@ export default function Menu() {
               boxShadow: theme.shadows.lg,
             }}
           >
-            <PlaceholderImage
-              label="[Foto pizza]"
-              aspectRatio="4/3"
-              style={{ marginBottom: theme.spacing["3xl"] }}
-            />
+            {selectedItem.image ? (
+              <img
+                src={selectedItem.image}
+                alt={selectedItem.name}
+                style={{
+                  width: "100%",
+                  aspectRatio: "4/3",
+                  objectFit: "cover",
+                  borderRadius: theme.borderRadius.md,
+                  marginBottom: theme.spacing["3xl"],
+                  display: "block",
+                }}
+              />
+            ) : (
+              <PlaceholderImage
+                label="[Foto pizza]"
+                aspectRatio="4/3"
+                style={{ marginBottom: theme.spacing["3xl"] }}
+              />
+            )}
             <h3
               style={{
                 fontFamily: theme.typography.fontFamily.display,

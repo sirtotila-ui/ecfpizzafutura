@@ -36,22 +36,6 @@ export default function Hero() {
           zIndex: 1,
         }}
       >
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.6 }}
-          style={{
-            fontFamily: theme.typography.fontFamily.sans,
-            fontSize: theme.typography.fontSize.sm,
-            fontWeight: theme.typography.fontWeight.semibold,
-            color: theme.colors.text.secondary,
-            textTransform: "uppercase",
-            letterSpacing: theme.typography.letterSpacing.wide,
-            marginBottom: theme.spacing["3xl"],
-          }}
-        >
-          🍕 PIZZERIA ARTIGIANALE · RAVENNA
-        </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -144,15 +128,16 @@ export default function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.6 }}
+          className="hero-stats"
           style={{
             display: "flex",
             gap: theme.spacing["6xl"],
             justifyContent: "center",
-            flexWrap: "wrap",
+            flexWrap: "nowrap",
           }}
         >
           {STATS.map((stat, index) => (
-            <div key={index} style={{ textAlign: "center" }}>
+            <div key={index} style={{ textAlign: "center", flex: "1 1 0", minWidth: 0 }}>
               <div
                 style={{
                   fontFamily: theme.typography.fontFamily.display,
@@ -178,6 +163,19 @@ export default function Hero() {
             </div>
           ))}
         </motion.div>
+        <style>{`
+          .hero-stats {
+            flex-wrap: nowrap !important;
+          }
+          @media (max-width: 768px) {
+            .hero-stats {
+              gap: 16px !important;
+            }
+            .hero-stats > div > div:first-child {
+              font-size: 20px !important;
+            }
+          }
+        `}</style>
       </motion.div>
     </section>
   );

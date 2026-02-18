@@ -59,7 +59,7 @@ export default function Navbar() {
             src="/logo.png"
             alt="Futura"
             style={{
-              height: 44,
+              height: 36,
               width: "auto",
               objectFit: "contain",
             }}
@@ -80,7 +80,7 @@ export default function Navbar() {
                 cursor: "pointer",
                 padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
                 fontFamily: theme.typography.fontFamily.sans,
-                fontSize: theme.typography.fontSize.sm,
+                fontSize: theme.typography.fontSize.xs,
                 fontWeight:
                   activeSection === id
                     ? theme.typography.fontWeight.semibold
@@ -196,7 +196,7 @@ export default function Navbar() {
                     cursor: "pointer",
                     padding: theme.spacing.xl,
                     fontFamily: theme.typography.fontFamily.display,
-                    fontSize: theme.typography.fontSize["4xl"],
+                    fontSize: theme.typography.fontSize["2xl"],
                     fontWeight: theme.typography.fontWeight.semibold,
                     color:
                       activeSection === id

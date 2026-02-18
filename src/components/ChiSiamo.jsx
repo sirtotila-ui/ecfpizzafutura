@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import SectionHeader from "./SectionHeader";
-import PlaceholderImage from "./PlaceholderImage";
 import { MICHELE } from "../constants/data";
 import { theme } from "../styles/theme";
 
@@ -75,10 +74,15 @@ export default function ChiSiamo() {
             </div>
           </div>
           <div style={{ borderRadius: theme.borderRadius.md, overflow: "hidden" }}>
-            <PlaceholderImage
-              label="[Foto Michele]"
-              aspectRatio="1"
-              style={{ background: theme.colors.background.light }}
+            <img
+              src="/foto-pizzaiolo.png"
+              alt="Michele Basigli, pizzaiolo Futura"
+              style={{
+                width: "100%",
+                aspectRatio: "1",
+                objectFit: "cover",
+                display: "block",
+              }}
             />
           </div>
         </motion.div>
