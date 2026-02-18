@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Link, useLocation } from "react-router-dom";
-import { SECTIONS, NAV_LABELS } from "../constants/data";
-import { CONFIG } from "../constants/config";
 import { theme } from "../styles/theme";
 import { useScroll } from "../hooks/useScroll";
+
+const MAIN_NAV = [
+  { id: "menu", label: "Menù", href: null },
+  { id: "market", label: "Market", isRoute: true },
+  { id: "chi-siamo", label: "Chi siamo", href: null },
+  { id: "contatti", label: "Contatti", href: null },
+];
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,31 +25,51 @@ export default function Navbar() {
   }, [mobileMenuOpen]);
 
   const scrollToSection = (id) => {
-    if (isMarketPage) {
-      setMobileMenuOpen(false);
+    setMobileMenuOpen(false);
+    if (isMarketPage && id !== "market") {
+      window.location.href = `/#${id}`;
       return;
     }
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
-    setMobileMenuOpen(false);
   };
 
-  const getNavClickHandler = (id) => () => {
-    if (id === "market") {
+  const handleNavClick = (item) => {
+    if (item.isRoute) {
       setMobileMenuOpen(false);
       return;
     }
-    if (isMarketPage) {
-      setMobileMenuOpen(false);
-      return;
-    }
-    scrollToSection(id);
+    scrollToSection(item.id);
   };
+
+  const handlePrenota = () => {
+    setMobileMenuOpen(false);
+    if (isMarketPage) {
+      window.location.href = "/#contatti";
+      return;
+    }
+    scrollToSection("contatti");
+  };
+
+  const linkStyle = (item) => ({
+    padding: "10px 16px",
+    fontFamily: theme.typography.fontFamily.sans,
+    fontSize: 15,
+    fontWeight: 500,
+    color:
+      (item.id === "market" && isMarketPage) || activeSection === item.id
+        ? theme.colors.primary.main
+        : theme.colors.text.primary,
+    textDecoration: "none",
+    transition: "color 0.2s ease",
+    border: "none",
+    background: "none",
+    cursor: "pointer",
+  });
 
   return (
     <>
-      <nav
-        role="navigation"
-        aria-label="Navigazione principale"
+      <header
+        role="banner"
         style={{
           position: "fixed",
           top: 0,
@@ -52,240 +77,254 @@ export default function Navbar() {
           right: 0,
           zIndex: 1000,
           background: theme.colors.background.white,
-          borderBottom: `1px solid ${theme.colors.border.light}`,
-          padding: `0 ${theme.spacing["3xl"]}`,
-          height: 72,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          boxShadow: theme.shadows.sm,
+          borderBottom: `1px solid rgba(0,0,0,0.06)`,
+          boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}
       >
-        <Link
-          to="/"
+        <nav
+          role="navigation"
+          aria-label="Navigazione principale"
           style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            padding: "0 24px",
+            height: 72,
             display: "flex",
             alignItems: "center",
-            textDecoration: "none",
-            height: "100%",
+            justifyContent: "space-between",
           }}
         >
-          <img
-            src="/logo.png"
-            alt="Futura"
+          <Link
+            to="/"
             style={{
-              height: 36,
-              width: "auto",
-              objectFit: "contain",
+              display: "flex",
+              alignItems: "center",
+              textDecoration: "none",
+              flexShrink: 0,
             }}
-          />
-        </Link>
-        <div
-          style={{ display: "flex", gap: theme.spacing.xs }}
-          className="pt-dsk"
-        >
-          {SECTIONS.map((id) =>
-            id === "market" ? (
-              <Link
-                key={id}
-                to="/market"
-                onClick={() => setMobileMenuOpen(false)}
-                aria-label="Vai al Market"
-                style={{
-                  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-                  fontFamily: theme.typography.fontFamily.sans,
-                  fontSize: theme.typography.fontSize.xs,
-                  fontWeight: isMarketPage ? theme.typography.fontWeight.semibold : theme.typography.fontWeight.normal,
-                  color: isMarketPage ? theme.colors.primary.main : theme.colors.text.secondary,
-                  textTransform: "uppercase",
-                  letterSpacing: theme.typography.letterSpacing.tight,
-                  textDecoration: "none",
-                }}
-              >
-                {NAV_LABELS[id]}
-              </Link>
-            ) : (
-              <button
-                key={id}
-                onClick={isMarketPage ? () => setMobileMenuOpen(false) : getNavClickHandler(id)}
-                aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-                  fontFamily: theme.typography.fontFamily.sans,
-                  fontSize: theme.typography.fontSize.xs,
-                  fontWeight:
-                    activeSection === id
-                      ? theme.typography.fontWeight.semibold
-                      : theme.typography.fontWeight.normal,
-                  color:
-                    activeSection === id
-                      ? theme.colors.primary.main
-                      : theme.colors.text.secondary,
-                textTransform: "uppercase",
-                letterSpacing: theme.typography.letterSpacing.tight,
-                transition: theme.transitions.fast,
+          >
+            <img
+              src="/logo.png"
+              alt="Futura"
+              style={{
+                height: 40,
+                width: "auto",
+                objectFit: "contain",
+              }}
+            />
+          </Link>
+
+          <div className="nav-desktop" style={{ display: "flex", alignItems: "center", gap: 4 }}>
+            {MAIN_NAV.map((item) =>
+              item.isRoute ? (
+                <Link
+                  key={item.id}
+                  to="/market"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    ...linkStyle(item),
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isMarketPage || item.id !== "market") e.currentTarget.style.color = theme.colors.primary.main;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color =
+                      (item.id === "market" && isMarketPage) ? theme.colors.primary.main : theme.colors.text.primary;
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleNavClick(item)}
+                  style={linkStyle(item)}
+                  onMouseEnter={(e) => {
+                    if (activeSection !== item.id) e.currentTarget.style.color = theme.colors.primary.main;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color =
+                      activeSection === item.id ? theme.colors.primary.main : theme.colors.text.primary;
+                  }}
+                >
+                  {item.label}
+                </button>
+              )
+            )}
+            <button
+              type="button"
+              onClick={handlePrenota}
+              className="btn-prenota"
+              style={{
+                marginLeft: 12,
+                padding: "10px 20px",
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: 15,
+                fontWeight: 600,
+                color: theme.colors.background.white,
+                background: theme.colors.primary.main,
+                border: "none",
+                borderRadius: 8,
+                cursor: "pointer",
+                transition: "background 0.2s ease, transform 0.15s ease",
               }}
               onMouseEnter={(e) => {
-                if (activeSection !== id) {
-                  e.target.style.color = theme.colors.primary.light;
-                }
+                e.currentTarget.style.background = theme.colors.primary.dark;
+                e.currentTarget.style.transform = "translateY(-1px)";
               }}
               onMouseLeave={(e) => {
-                if (activeSection !== id) {
-                  e.target.style.color = theme.colors.text.secondary;
-                }
+                e.currentTarget.style.background = theme.colors.primary.main;
+                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
-              {NAV_LABELS[id]}
+              Prenota
             </button>
-            )
-          )}
-        </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="pt-ham"
-          aria-label="Menu mobile"
-          aria-expanded={mobileMenuOpen}
-          style={{
-            display: "none",
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            flexDirection: "column",
-            gap: 5,
-            padding: theme.spacing.sm,
-            zIndex: 10001,
-            position: "relative",
-          }}
-        >
-          <span
+          </div>
+
+          <button
+            type="button"
+            className="nav-hamburger"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? "Chiudi menu" : "Apri menu"}
+            aria-expanded={mobileMenuOpen}
             style={{
-              width: 24,
-              height: 2,
-              background: mobileMenuOpen
-                ? theme.colors.primary.main
-                : theme.colors.text.primary,
-              transition: theme.transitions.normal,
-              transform: mobileMenuOpen
-                ? "rotate(45deg) translate(5px,5px)"
-                : "none",
+              display: "none",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: 6,
+              width: 44,
+              height: 44,
+              padding: 0,
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              zIndex: 10001,
             }}
-          />
-          <span
-            style={{
-              width: 24,
-              height: 2,
-              background: theme.colors.text.primary,
-              transition: theme.transitions.normal,
-              opacity: mobileMenuOpen ? 0 : 1,
-            }}
-          />
-          <span
-            style={{
-              width: 24,
-              height: 2,
-              background: mobileMenuOpen
-                ? theme.colors.primary.main
-                : theme.colors.text.primary,
-              transition: theme.transitions.normal,
-              transform: mobileMenuOpen
-                ? "rotate(-45deg) translate(5px,-5px)"
-                : "none",
-            }}
-          />
-        </button>
-        {mobileMenuOpen &&
-          createPortal(
-            <div
-              role="dialog"
-              aria-label="Menu mobile"
-              aria-modal="true"
+          >
+            <span
               style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                width: "100%",
-                height: "100%",
-                zIndex: 99999,
-                background: "#FFFFFF",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: theme.spacing.lg,
-                padding: theme.spacing["3xl"],
+                display: "block",
+                width: 22,
+                height: 2,
+                background: mobileMenuOpen ? theme.colors.primary.main : theme.colors.text.primary,
+                transition: "transform 0.25s ease, opacity 0.2s ease",
+                transform: mobileMenuOpen ? "rotate(45deg) translate(5px, 5px)" : "none",
+              }}
+            />
+            <span
+              style={{
+                display: "block",
+                width: 22,
+                height: 2,
+                background: theme.colors.text.primary,
+                transition: "opacity 0.2s ease",
+                opacity: mobileMenuOpen ? 0 : 1,
+              }}
+            />
+            <span
+              style={{
+                display: "block",
+                width: 22,
+                height: 2,
+                background: mobileMenuOpen ? theme.colors.primary.main : theme.colors.text.primary,
+                transition: "transform 0.25s ease",
+                transform: mobileMenuOpen ? "rotate(-45deg) translate(5px, -5px)" : "none",
+              }}
+            />
+          </button>
+        </nav>
+      </header>
+
+      {mobileMenuOpen &&
+        createPortal(
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Menu di navigazione"
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              background: theme.colors.background.white,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "stretch",
+              justifyContent: "center",
+              padding: "80px 24px 40px",
+              overflow: "auto",
+            }}
+          >
+            {MAIN_NAV.map((item) =>
+              item.isRoute ? (
+                <Link
+                  key={item.id}
+                  to="/market"
+                  onClick={() => setMobileMenuOpen(false)}
+                  style={{
+                    padding: "16px 0",
+                    fontFamily: theme.typography.fontFamily.sans,
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: isMarketPage && item.id === "market" ? theme.colors.primary.main : theme.colors.text.primary,
+                    textDecoration: "none",
+                    borderBottom: "1px solid rgba(0,0,0,0.06)",
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleNavClick(item)}
+                  style={{
+                    padding: "16px 0",
+                    width: "100%",
+                    textAlign: "left",
+                    fontFamily: theme.typography.fontFamily.sans,
+                    fontSize: 20,
+                    fontWeight: 500,
+                    color: activeSection === item.id ? theme.colors.primary.main : theme.colors.text.primary,
+                    background: "none",
+                    border: "none",
+                    borderBottom: "1px solid rgba(0,0,0,0.06)",
+                    cursor: "pointer",
+                  }}
+                >
+                  {item.label}
+                </button>
+              )
+            )}
+            <button
+              type="button"
+              onClick={handlePrenota}
+              style={{
+                marginTop: 24,
+                padding: "16px 24px",
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: 18,
+                fontWeight: 600,
+                color: theme.colors.background.white,
+                background: theme.colors.primary.main,
+                border: "none",
+                borderRadius: 10,
+                cursor: "pointer",
               }}
             >
-              {SECTIONS.map((id) =>
-                id === "market" ? (
-                  <Link
-                    key={id}
-                    to="/market"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{
-                      padding: theme.spacing.xl,
-                      fontFamily: theme.typography.fontFamily.display,
-                      fontSize: theme.typography.fontSize["2xl"],
-                      fontWeight: theme.typography.fontWeight.semibold,
-                      color: isMarketPage ? theme.colors.primary.main : theme.colors.text.primary,
-                      width: "100%",
-                      maxWidth: 320,
-                      textAlign: "center",
-                      textDecoration: "none",
-                    }}
-                  >
-                    {NAV_LABELS[id]}
-                  </Link>
-                ) : (
-                  <button
-                    key={id}
-                    onClick={() => {
-                      if (isMarketPage) {
-                        setMobileMenuOpen(false);
-                        window.location.href = `/#${id}`;
-                      } else {
-                        scrollToSection(id);
-                      }
-                    }}
-                    aria-label={`Vai alla sezione ${NAV_LABELS[id]}`}
-                    style={{
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      padding: theme.spacing.xl,
-                      fontFamily: theme.typography.fontFamily.display,
-                      fontSize: theme.typography.fontSize["2xl"],
-                      fontWeight: theme.typography.fontWeight.semibold,
-                      color:
-                        activeSection === id
-                          ? theme.colors.primary.main
-                          : theme.colors.text.primary,
-                      width: "100%",
-                      maxWidth: 320,
-                      textAlign: "center",
-                      transition: theme.transitions.fast,
-                    }}
-                  >
-                    {NAV_LABELS[id]}
-                  </button>
-                )
-              )}
-            </div>,
-            document.body
-          )}
-        <style>{`
-          .pt-ham { display: none !important; }
-          @media (max-width: ${theme.breakpoints.lg}) {
-            .pt-dsk { display: none !important; }
-            .pt-ham { display: flex !important; }
-          }
-        `}</style>
-      </nav>
+              Prenota
+            </button>
+          </div>,
+          document.body
+        )}
+
+      <style>{`
+        .nav-hamburger { display: none !important; }
+        @media (max-width: 900px) {
+          .nav-desktop { display: none !important; }
+          .nav-hamburger { display: flex !important; }
+        }
+      `}</style>
     </>
   );
 }
