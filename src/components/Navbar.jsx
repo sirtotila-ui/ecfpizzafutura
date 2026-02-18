@@ -81,10 +81,14 @@ export default function Navbar() {
           left: 0,
           right: 0,
           zIndex: 1000,
-          background: theme.colors.background.white,
+          backgroundImage: "url('/header-background.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
           borderBottom: `1px solid rgba(0,0,0,0.06)`,
           boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
         }}
+        className="navbar-header"
       >
         <nav
           role="navigation"
@@ -334,6 +338,21 @@ export default function Navbar() {
         )}
 
       <style>{`
+        .navbar-header {
+          position: relative;
+        }
+        .navbar-header::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
+          z-index: -1;
+        }
         .nav-hamburger { display: none !important; }
         @media (max-width: 900px) {
           .nav-desktop { display: none !important; }

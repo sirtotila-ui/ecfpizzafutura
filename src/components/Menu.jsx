@@ -330,7 +330,8 @@ export default function Menu() {
                   </p>
                 </div>
               </motion.div>
-            ))}
+            ))
+            )}
           </motion.div>
         </AnimatePresence>
       </div>
