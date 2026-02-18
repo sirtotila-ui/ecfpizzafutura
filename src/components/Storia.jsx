@@ -1,0 +1,55 @@
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import SectionHeader from "./SectionHeader";
+import { theme } from "../styles/theme";
+
+export default function Filosofia() {
+  const [ref, inView] = useInView({
+    threshold: 0.2,
+    triggerOnce: true,
+  });
+
+  return (
+    <section
+      id="filosofia"
+      ref={ref}
+      style={{
+        padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
+        background: theme.colors.background.light,
+      }}
+    >
+      <div style={{ maxWidth: 800, margin: "0 auto", textAlign: "center" }}>
+        <SectionHeader
+          label="La Nostra Filosofia"
+          title={
+            <>
+              Meno Compromessi,
+              <br />
+              Più <span style={{ color: theme.colors.primary.main }}>Ricerca</span>
+            </>
+          }
+        />
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.2, duration: 0.6 }}
+          style={{
+            fontFamily: theme.typography.fontFamily.sans,
+            fontSize: theme.typography.fontSize.lg,
+            color: theme.colors.text.secondary,
+            lineHeight: 2,
+            margin: "0 auto",
+            maxWidth: 640,
+          }}
+        >
+          Ogni stagione il menù cambia. Scegliamo ingredienti di stagione dai
+          migliori produttori locali: pomodoro Casa Marrazzo da Napoli,
+          fiordilatte di Roccamonfina, salsiccia di Mora Romagnola, Parmigiano di
+          Vacche Rosse. L'impasto è il risultato di anni di sperimentazione —
+          leggero, digeribile, cotto nel forno a legna. Ogni pizza racconta un
+          territorio.
+        </motion.p>
+      </div>
+    </section>
+  );
+}
