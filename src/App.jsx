@@ -11,6 +11,7 @@ import Asporto from "./components/Asporto";
 import FAQ from "./components/FAQ";
 import Footer from "./components/Footer";
 import MarketPage from "./components/MarketPage";
+import ScrollToTop from "./components/ScrollToTop";
 
 function LandingPage() {
   return (
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/market" element={<MarketPage />} />
         </Routes>
       </main>
+      <ScrollToTop />
     </div>
   );
 }

@@ -98,6 +98,7 @@ export const theme = {
     verde: "0 4px 20px rgba(34,197,94,0.25)",
   },
   breakpoints: {
+    xs: "480px",
     sm: "640px",
     md: "768px",
     lg: "900px",

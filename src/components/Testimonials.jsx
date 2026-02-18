@@ -14,6 +14,7 @@ export default function Testimonials() {
     <section
       id="recensioni"
       ref={ref}
+      className="testimonials-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.light,
@@ -140,6 +141,21 @@ export default function Testimonials() {
           </div>
         </motion.div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .testimonials-section {
+            padding: 60px 20px !important;
+          }
+          .testimonials-section [style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .testimonials-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

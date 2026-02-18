@@ -15,6 +15,7 @@ export default function Hero() {
   return (
     <section
       id="home"
+      className="hero-section"
       style={{
         minHeight: "100vh",
         display: "flex",
@@ -167,12 +168,20 @@ export default function Hero() {
           .hero-stats {
             flex-wrap: nowrap !important;
           }
-          @media (max-width: 768px) {
+          @media (max-width: ${theme.breakpoints.md}) {
+            .hero-section {
+              padding: 80px 20px 60px !important;
+            }
             .hero-stats {
               gap: 16px !important;
             }
             .hero-stats > div > div:first-child {
               font-size: 20px !important;
+            }
+          }
+          @media (max-width: ${theme.breakpoints.xs}) {
+            .hero-section {
+              padding: 60px 16px 40px !important;
             }
           }
         `}</style>

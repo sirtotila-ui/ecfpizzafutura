@@ -13,6 +13,7 @@ export default function Filosofia() {
     <section
       id="filosofia"
       ref={ref}
+      className="filosofia-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.light,
@@ -79,6 +80,18 @@ export default function Filosofia() {
           </motion.a>
         </motion.div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .filosofia-section {
+            padding: 60px 20px !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .filosofia-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

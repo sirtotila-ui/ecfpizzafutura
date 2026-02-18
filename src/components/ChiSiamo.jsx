@@ -14,6 +14,7 @@ export default function ChiSiamo() {
     <section
       id="chi-siamo"
       ref={ref}
+      className="chi-siamo-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.white,
@@ -77,6 +78,7 @@ export default function ChiSiamo() {
             <img
               src="/foto-pizzaiolo.png"
               alt="Michele Basigli, pizzaiolo Futura"
+              loading="lazy"
               style={{
                 width: "100%",
                 aspectRatio: "1",
@@ -91,6 +93,16 @@ export default function ChiSiamo() {
         @media (max-width: ${theme.breakpoints.lg}) {
           .chi-siamo-grid {
             grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.md}) {
+          .chi-siamo-section {
+            padding: 60px 20px !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .chi-siamo-section {
+            padding: 40px 16px !important;
           }
         }
       `}</style>

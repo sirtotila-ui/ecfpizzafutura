@@ -52,6 +52,11 @@ export default function Navbar() {
 
   const linkStyle = (item) => ({
     padding: "10px 16px",
+    minHeight: "44px",
+    minWidth: "44px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     fontFamily: theme.typography.fontFamily.sans,
     fontSize: 15,
     fontWeight: 500,
@@ -159,6 +164,8 @@ export default function Navbar() {
               style={{
                 marginLeft: 12,
                 padding: "10px 20px",
+                minHeight: "44px",
+                minWidth: "44px",
                 fontFamily: theme.typography.fontFamily.sans,
                 fontSize: 15,
                 fontWeight: 600,
@@ -263,6 +270,9 @@ export default function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   style={{
                     padding: "16px 0",
+                    minHeight: "44px",
+                    display: "flex",
+                    alignItems: "center",
                     fontFamily: theme.typography.fontFamily.sans,
                     fontSize: 16,
                     fontWeight: 500,
@@ -280,8 +290,11 @@ export default function Navbar() {
                   onClick={() => handleNavClick(item)}
                   style={{
                     padding: "16px 0",
+                    minHeight: "44px",
                     width: "100%",
                     textAlign: "left",
+                    display: "flex",
+                    alignItems: "center",
                     fontFamily: theme.typography.fontFamily.sans,
                     fontSize: 16,
                     fontWeight: 500,
@@ -302,6 +315,8 @@ export default function Navbar() {
               style={{
                 marginTop: 24,
                 padding: "14px 20px",
+                minHeight: "44px",
+                minWidth: "44px",
                 fontFamily: theme.typography.fontFamily.sans,
                 fontSize: 15,
                 fontWeight: 600,

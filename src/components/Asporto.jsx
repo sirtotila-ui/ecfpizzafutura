@@ -14,6 +14,7 @@ export default function Market() {
     <section
       id="market"
       ref={ref}
+      className="asporto-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.dark,
@@ -138,6 +139,18 @@ export default function Market() {
           </motion.a>
         </motion.div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .asporto-section {
+            padding: 60px 20px !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .asporto-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

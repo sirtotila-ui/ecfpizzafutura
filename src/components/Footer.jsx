@@ -1,15 +1,15 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CONFIG } from "../constants/config";
 import { theme } from "../styles/theme";
+import { FacebookIcon, InstagramIcon, TripAdvisorIcon } from "./SocialIcons";
+import PrenotaForm from "./PrenotaForm";
 
 export default function Footer() {
+  const [showForm, setShowForm] = useState(false);
+
   const handlePrenota = () => {
-    const text = encodeURIComponent("Ciao, vorrei prenotare un tavolo.");
-    window.open(
-      `https://wa.me/${CONFIG.whatsappNumber.replace(/\D/g, "")}?text=${text}`,
-      "_blank",
-      "noopener,noreferrer"
-    );
+    setShowForm(true);
   };
 
   const handlePhone = () => {
@@ -27,6 +27,7 @@ export default function Footer() {
   return (
     <section
       id="contatti"
+      className="footer-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.dark,
@@ -120,6 +121,33 @@ export default function Footer() {
           </motion.button>
         </div>
 
+        {showForm && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            style={{ marginBottom: theme.spacing["5xl"] }}
+          >
+            <PrenotaForm />
+            <button
+              onClick={() => setShowForm(false)}
+              style={{
+                marginTop: theme.spacing.lg,
+                background: "transparent",
+                border: "none",
+                color: theme.colors.text.muted,
+                cursor: "pointer",
+                fontSize: theme.typography.fontSize.sm,
+                textDecoration: "underline",
+                display: "block",
+                margin: `${theme.spacing.lg} auto 0`,
+              }}
+            >
+              Chiudi
+            </button>
+          </motion.div>
+        )}
+
         <div
           style={{
             display: "flex",
@@ -130,7 +158,14 @@ export default function Footer() {
             color: theme.colors.text.muted,
           }}
         >
-          <div>📍 {CONFIG.address.full}</div>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.address.full)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: "inherit", textDecoration: "none" }}
+          >
+            📍 {CONFIG.address.full}
+          </a>
           <a
             href={`tel:${CONFIG.phoneLink.replace(/\s/g, "")}`}
             style={{ color: "inherit", textDecoration: "none" }}
@@ -143,7 +178,7 @@ export default function Footer() {
           >
             ✉️ {CONFIG.email}
           </a>
-          <div>{CONFIG.openingHours}</div>
+          <div>🕐 {CONFIG.openingHours}</div>
         </div>
 
         <div
@@ -161,10 +196,24 @@ export default function Footer() {
             aria-label="Facebook"
             style={{
               color: theme.colors.text.muted,
-              fontSize: theme.typography.fontSize.lg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: theme.borderRadius.md,
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = theme.colors.primary.main;
+              e.currentTarget.style.background = "rgba(34,197,94,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.colors.text.muted;
+              e.currentTarget.style.background = "transparent";
             }}
           >
-            Facebook
+            <FacebookIcon />
           </a>
           <a
             href={CONFIG.socialMedia.instagram}
@@ -173,10 +222,24 @@ export default function Footer() {
             aria-label="Instagram"
             style={{
               color: theme.colors.text.muted,
-              fontSize: theme.typography.fontSize.lg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: theme.borderRadius.md,
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = theme.colors.primary.main;
+              e.currentTarget.style.background = "rgba(34,197,94,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.colors.text.muted;
+              e.currentTarget.style.background = "transparent";
             }}
           >
-            Instagram
+            <InstagramIcon />
           </a>
           <a
             href={CONFIG.socialMedia.tripadvisor}
@@ -185,10 +248,24 @@ export default function Footer() {
             aria-label="TripAdvisor"
             style={{
               color: theme.colors.text.muted,
-              fontSize: theme.typography.fontSize.lg,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 44,
+              height: 44,
+              borderRadius: theme.borderRadius.md,
+              transition: "all 0.2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = theme.colors.primary.main;
+              e.currentTarget.style.background = "rgba(34,197,94,0.1)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = theme.colors.text.muted;
+              e.currentTarget.style.background = "transparent";
             }}
           >
-            TripAdvisor
+            <TripAdvisorIcon />
           </a>
         </div>
 
@@ -204,6 +281,18 @@ export default function Footer() {
           © 2026 {CONFIG.brandName} — {CONFIG.claim}
         </div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .footer-section {
+            padding: 60px 20px !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .footer-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

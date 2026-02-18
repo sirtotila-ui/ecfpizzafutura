@@ -14,6 +14,7 @@ export default function Ingredienti() {
     <section
       id="ingredienti"
       ref={ref}
+      className="ingredienti-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.white,
@@ -80,6 +81,21 @@ export default function Ingredienti() {
           ))}
         </div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .ingredienti-section {
+            padding: 60px 20px !important;
+          }
+          .ingredienti-section [style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .ingredienti-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

@@ -14,6 +14,7 @@ export default function Come() {
     <section
       id="come"
       ref={ref}
+      className="come-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.light,
@@ -98,6 +99,18 @@ export default function Come() {
           ))}
         </div>
       </div>
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .come-section {
+            padding: 60px 20px !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .come-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

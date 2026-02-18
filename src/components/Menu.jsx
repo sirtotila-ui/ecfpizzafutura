@@ -10,15 +10,37 @@ const CATEGORIES = [
   { id: "classiche", label: "Classiche" },
 ];
 
+const TAG_COLORS = {
+  vegetariana: { bg: "#F0FDF4", color: "#16A34A" },
+  vegan: { bg: "#ECFDF5", color: "#059669" },
+  bestseller: { bg: "#FEF3C7", color: "#D97706" },
+  premium: { bg: "#F3E8FF", color: "#7C3AED" },
+  locale: { bg: "#DBEAFE", color: "#2563EB" },
+  nuovo: { bg: "#FCE7F3", color: "#DB2777" },
+  schiacciatina: { bg: "#FFF7ED", color: "#EA580C" },
+};
+
 export default function Menu() {
   const [category, setCategory] = useState("stagionali");
   const [selectedItem, setSelectedItem] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTag, setSelectedTag] = useState(null);
 
   const items = MENU_ITEMS[category] || [];
+  
+  const filteredItems = items.filter((item) => {
+    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.desc.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTag = !selectedTag || item.tag === selectedTag;
+    return matchesSearch && matchesTag;
+  });
+
+  const availableTags = [...new Set(items.map(item => item.tag).filter(Boolean))];
 
   return (
     <section
       id="menu"
+      className="menu-section"
       style={{
         padding: `${theme.spacing["10xl"]} ${theme.spacing["3xl"]}`,
         background: theme.colors.background.light,
@@ -30,6 +52,90 @@ export default function Menu() {
           title="Le Nostre Pizze"
           sub="Ingredienti di stagione e classici senza tempo."
         />
+        
+        <div style={{ marginBottom: theme.spacing["4xl"] }}>
+          <input
+            type="text"
+            placeholder="Cerca pizza..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              width: "100%",
+              maxWidth: 400,
+              margin: "0 auto",
+              display: "block",
+              padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+              borderRadius: theme.borderRadius.md,
+              border: `2px solid ${theme.colors.border.light}`,
+              fontFamily: theme.typography.fontFamily.sans,
+              fontSize: theme.typography.fontSize.md,
+              outline: "none",
+              transition: "border-color 0.2s ease",
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = theme.colors.primary.main;
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = theme.colors.border.light;
+            }}
+          />
+        </div>
+
+        {availableTags.length > 0 && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: theme.spacing.sm,
+              marginBottom: theme.spacing.lg,
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              onClick={() => setSelectedTag(null)}
+              style={{
+                background: selectedTag === null ? theme.colors.primary.main : theme.colors.background.white,
+                color: selectedTag === null ? theme.colors.background.white : theme.colors.text.primary,
+                border: `2px solid ${selectedTag === null ? theme.colors.primary.main : theme.colors.border.medium}`,
+                padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+                minHeight: "44px",
+                minWidth: "44px",
+                borderRadius: theme.borderRadius.pill,
+                fontFamily: theme.typography.fontFamily.sans,
+                fontSize: theme.typography.fontSize.xs,
+                fontWeight: theme.typography.fontWeight.medium,
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+            >
+              Tutte
+            </button>
+            {availableTags.map((tag) => (
+              <button
+                key={tag}
+                onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+                style={{
+                  background: selectedTag === tag ? TAG_COLORS[tag]?.bg || theme.colors.background.badge : theme.colors.background.white,
+                  color: selectedTag === tag ? TAG_COLORS[tag]?.color || theme.colors.primary.main : theme.colors.text.primary,
+                  border: `2px solid ${selectedTag === tag ? TAG_COLORS[tag]?.color || theme.colors.primary.main : theme.colors.border.medium}`,
+                  padding: `${theme.spacing.xs} ${theme.spacing.md}`,
+                  minHeight: "44px",
+                  minWidth: "44px",
+                  borderRadius: theme.borderRadius.pill,
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.xs,
+                  fontWeight: theme.typography.fontWeight.medium,
+                  cursor: "pointer",
+                  textTransform: "capitalize",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div
           style={{
             display: "flex",
@@ -84,13 +190,32 @@ export default function Menu() {
               gap: theme.spacing["3xl"],
             }}
           >
-            {items.map((item, i) => (
-              <motion.div
+            {filteredItems.length === 0 ? (
+              <div
+                style={{
+                  gridColumn: "1 / -1",
+                  textAlign: "center",
+                  padding: theme.spacing["5xl"],
+                  color: theme.colors.text.muted,
+                  fontFamily: theme.typography.fontFamily.sans,
+                  fontSize: theme.typography.fontSize.lg,
+                }}
+              >
+                Nessuna pizza trovata
+              </div>
+            ) : (
+              filteredItems.map((item, i) => (
+                <motion.div
                 key={i}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: i * 0.05, duration: 0.3 }}
-                whileHover={{ y: -4, boxShadow: theme.shadows.lg }}
+                whileHover={{ 
+                  y: -6, 
+                  boxShadow: theme.shadows.lg,
+                  transition: { duration: 0.2 }
+                }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => setSelectedItem(item)}
                 style={{
                   background: theme.colors.background.white,
@@ -99,6 +224,7 @@ export default function Menu() {
                   cursor: "pointer",
                   boxShadow: theme.shadows.md,
                   border: `1px solid ${theme.colors.border.light}`,
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
                 <div
@@ -113,11 +239,19 @@ export default function Menu() {
                     <img
                       src={item.image}
                       alt={item.name}
+                      loading="lazy"
                       style={{
                         width: "100%",
                         height: "100%",
                         objectFit: "cover",
                         display: "block",
+                        transition: "transform 0.3s ease",
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = "scale(1.05)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = "scale(1)";
                       }}
                     />
                   ) : (
@@ -131,20 +265,19 @@ export default function Menu() {
                   <div
                     style={{
                       paddingLeft: theme.spacing["3xl"],
-                      paddingRight: theme.spacing["3xl"],
-                      marginTop: -theme.spacing.lg,
-                      marginBottom: theme.spacing.sm,
+                      paddingTop: theme.spacing.md,
+                      paddingBottom: theme.spacing.md,
                     }}
                   >
                     <span
                       style={{
-                        background: theme.colors.background.badge,
-                        color: theme.colors.primary.main,
+                        background: TAG_COLORS[item.tag]?.bg || theme.colors.background.badge,
+                        color: TAG_COLORS[item.tag]?.color || theme.colors.primary.main,
                         padding: `${theme.spacing.xs} ${theme.spacing.md}`,
-                        borderRadius: theme.borderRadius.sm,
+                        borderRadius: theme.borderRadius.pill,
                         fontSize: theme.typography.fontSize.xs,
-                        fontWeight: theme.typography.fontWeight.semibold,
-                        textTransform: "uppercase",
+                        fontWeight: theme.typography.fontWeight.medium,
+                        textTransform: "capitalize",
                       }}
                     >
                       {item.tag}
@@ -305,7 +438,22 @@ export default function Menu() {
             </button>
           </motion.div>
         </motion.div>
-      )}
+          )}
+      <style>{`
+        @media (max-width: ${theme.breakpoints.md}) {
+          .menu-section {
+            padding: 60px 20px !important;
+          }
+          .menu-section [style*="gridTemplateColumns"] {
+            grid-template-columns: 1fr !important;
+          }
+        }
+        @media (max-width: ${theme.breakpoints.xs}) {
+          .menu-section {
+            padding: 40px 16px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
